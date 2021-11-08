@@ -1,5 +1,5 @@
 {
-    "name": "joi",
+    "name": "@pantas-net/joi",
     "description": "Object schema validation",
     "version": "17.6.0",
     "repository": "git://github.com/sideway/joi",

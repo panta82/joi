@@ -1,5 +1,18 @@
 # joi
 
+----------------
+
+This is a private fork of joi.
+
+It has the following changes over the original:
+- Empty strings are no longer treated as errors.
+
+This repository is published to NPM as: https://www.npmjs.com/package/@pantas-net/joi
+
+The rest of the file is the same as upstream.
+
+----------------
+
 #### The most powerful schema description language and data validator for JavaScript.
 
 ## Installation
