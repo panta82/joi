@@ -1,6 +1,6 @@
 // The following definitions have been copied (almost) as-is from:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/hapi__joi
-// 
+//
 // Note: This file is expected to change dramatically in the next major release and have been
 // imported here to make migrating back to the "joi" module name simpler. It include known bugs
 // and other issues. It does not include some new features included in version 17.2.0 or newer.
@@ -576,7 +576,7 @@ declare namespace Joi {
         iterables?: boolean;
 
         /**
-         * when true, the value of the reference is used instead of its name in error messages 
+         * when true, the value of the reference is used instead of its name in error messages
          * and template rendering. Defaults to false.
          */
         render?: boolean;
@@ -715,7 +715,7 @@ declare namespace Joi {
 
     type NullableType<T> = undefined | null | T
 
-    type ObjectPropertiesSchema<T = any> = 
+    type ObjectPropertiesSchema<T = any> =
         T extends NullableType<string>
         ? Joi.StringSchema
         : T extends NullableType<number>
@@ -730,11 +730,11 @@ declare namespace Joi {
         ? Joi.ArraySchema
         : T extends NullableType<object>
         ? ObjectSchema<StrictSchemaMap<T>>
-        : never    
-    
+        : never
+
     type PartialSchemaMap<TSchema = any> = {
         [key in keyof TSchema]?: SchemaLike | SchemaLike[];
-    } 
+    }
 
     type StrictSchemaMap<TSchema = any> =  {
         [key in keyof TSchema]-?: ObjectPropertiesSchema<TSchema[key]>
@@ -1335,7 +1335,7 @@ declare namespace Joi {
         unsafe(enabled?: any): this;
     }
 
-    interface StringSchema extends AnySchema {
+    interface StringSchema<T extends string = string> extends AnySchema {
         /**
          * Requires the string value to only contain a-z, A-Z, and 0-9.
          */
@@ -2029,7 +2029,7 @@ declare namespace Joi {
         /**
          * Generates a schema object that matches a string data type. Note that empty strings are not allowed by default and must be enabled with allow('').
          */
-        string(): StringSchema;
+        string<T extends string = string>(): StringSchema<T>;
 
         /**
          * Generates a schema object that matches any symbol.
