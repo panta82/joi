@@ -23,7 +23,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.any().when('a', { is: 1, then: Joi.string(), otherwise: Joi.number() }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { type: 'number' }
                 ]
             });
@@ -33,7 +33,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.any().when('a', { is: 1, then: Joi.string() }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     {}
                 ]
             });
@@ -55,7 +55,7 @@ describe('jsonSchema', () => {
                 .when('a', { is: 1, then: Joi.string() })
                 .when('b', { is: 2, then: Joi.number() }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     {},
                     { type: 'number' }
                 ]
@@ -72,7 +72,7 @@ describe('jsonSchema', () => {
                 otherwise: Joi.boolean()
             }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { type: 'number' },
                     { type: 'boolean' }
                 ]
@@ -85,8 +85,7 @@ describe('jsonSchema', () => {
                 anyOf: [
                     {
                         type: 'string',
-                        description: 'test',
-                        minLength: 1
+                        description: 'test'
                     },
                     {
                         description: 'test'
@@ -108,7 +107,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.any().when('a', { is: 1, then: Joi.string() }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     {}
                 ]
             });
@@ -119,7 +118,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.string().when('a', { is: 1, then: Joi.string().min(5) }), {
                 anyOf: [
                     { type: 'string', minLength: 5 },
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ]
             });
         });
@@ -166,7 +165,7 @@ describe('jsonSchema', () => {
                     },
                     {
                         anyOf: [
-                            { type: 'string', minLength: 1 },
+                            { type: 'string' },
                             { enum: [1] }
                         ]
                     }
@@ -219,7 +218,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.string().allow(1), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { enum: [1] }
                 ]
             });
@@ -229,7 +228,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.string().description('foo').allow(1), {
                 anyOf: [
-                    { type: 'string', minLength: 1, description: 'foo' },
+                    { type: 'string', description: 'foo' },
                     { enum: [1] }
                 ]
             });
@@ -263,12 +262,12 @@ describe('jsonSchema', () => {
 
         it('avoids duplicate types when merging null', () => {
 
-            Helper.validateJsonSchema(Joi.string().allow(null), { type: ['string', 'null'], minLength: 1 });
+            Helper.validateJsonSchema(Joi.string().allow(null), { type: ['string', 'null'] });
         });
 
         it('avoids duplicate types when merging null and valid', () => {
 
-            Helper.validateJsonSchema(Joi.string().valid('a').allow(null), { type: ['string', 'null'], enum: ['a'] });
+            Helper.validateJsonSchema(Joi.string().valid('a').allow(null), { type: ['string', 'null'], enum: ['a', null] });
         });
 
         it('represents valids with multiple types', () => {
@@ -321,7 +320,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.string().allow(null, 1), {
                 anyOf: [
                     { type: 'null' },
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { enum: [1] }
                 ]
             });
@@ -354,7 +353,7 @@ describe('jsonSchema', () => {
 
         it('represents inferred mixed string and null valids', () => {
 
-            Helper.validateJsonSchema(Joi.valid('foo', null), { type: ['string', 'null'], enum: ['foo'] });
+            Helper.validateJsonSchema(Joi.valid('foo', null), { type: ['string', 'null'], enum: ['foo', null] });
         });
 
         it('represents string schema with number valid as number type', () => {
@@ -492,19 +491,19 @@ describe('jsonSchema', () => {
 
         it('represents alternatives as anyOf', () => {
 
-            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string()), { anyOf: [{ minLength: 1, type: 'string' }] });
+            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string()), { anyOf: [{ type: 'string' }] });
         });
 
         it('represents multiple alternatives as anyOf', () => {
 
-            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.number()), { anyOf: [{ type: 'string', minLength: 1 }, { type: 'number' }] });
+            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.number()), { anyOf: [{ type: 'string' }, { type: 'number' }] });
         });
 
         it('represents alternatives with null as anyOf', () => {
 
             Helper.validateJsonSchema(Joi.alternatives().try(Joi.string().allow(null), Joi.number()), {
                 anyOf: [
-                    { type: ['string', 'null'], minLength: 1 },
+                    { type: ['string', 'null'] },
                     { type: 'number' }
                 ]
             });
@@ -519,7 +518,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.valid(1, true)), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { type: ['number', 'boolean'], enum: [1, true] }
                 ]
             });
@@ -527,7 +526,7 @@ describe('jsonSchema', () => {
 
         it('represents alternatives with string and null as anyOf', () => {
 
-            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string().allow(null)), { anyOf: [{ type: ['string', 'null'], minLength: 1 }] });
+            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string().allow(null)), { anyOf: [{ type: ['string', 'null'] }] });
         });
 
         it('represents alternatives with object as anyOf', () => {
@@ -544,7 +543,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.alternatives().conditional('a', { is: 1, then: Joi.string(), otherwise: Joi.number() }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { type: 'number' }
                 ]
             });
@@ -559,7 +558,7 @@ describe('jsonSchema', () => {
                 otherwise: Joi.number()
             }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { type: 'number' }
                 ]
             });
@@ -657,14 +656,14 @@ describe('jsonSchema', () => {
                 .conditional('a', { is: 1, then: Joi.string() }), {
                 anyOf: [
                     { type: 'boolean' },
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ]
             });
         });
 
         it('represents match one as oneOf', () => {
 
-            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.number()).match('one'), { oneOf: [{ type: 'string', minLength: 1 }, { type: 'number' }] });
+            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.number()).match('one'), { oneOf: [{ type: 'string' }, { type: 'number' }] });
         });
 
         it('represents match all as allOf', () => {
@@ -676,7 +675,7 @@ describe('jsonSchema', () => {
                 ).match('all'),
                 {
                     allOf: [
-                        { type: 'object', properties: { a: { type: 'string', minLength: 1 } } },
+                        { type: 'object', properties: { a: { type: 'string' } } },
                         { type: 'object', properties: { b: { type: 'number' } } }
                     ]
                 }
@@ -692,7 +691,7 @@ describe('jsonSchema', () => {
                 ).match('all'),
                 {
                     allOf: [
-                        { type: 'object', properties: { a: { type: 'string', minLength: 1 } }, additionalProperties: false },
+                        { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: false },
                         { type: 'object', properties: { b: { type: 'number' } }, additionalProperties: false }
                     ]
                 }
@@ -708,14 +707,14 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.alternatives().conditional(Joi.ref('a'), { is: 1, then: Joi.string() }), {
                 anyOf: [
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ]
             });
         });
 
         it('represents anyOf with description', () => {
 
-            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.any().description('foo')), { anyOf: [{ type: 'string', minLength: 1 }, { description: 'foo' }] });
+            Helper.validateJsonSchema(Joi.alternatives().try(Joi.string(), Joi.any().description('foo')), { anyOf: [{ type: 'string' }, { description: 'foo' }] });
         });
 
         it('represents anyOf with single description', () => {
@@ -727,7 +726,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.alternatives().try(Joi.string()).allow(1), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { enum: [1] }
                 ]
             });
@@ -738,7 +737,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.alternatives().try(Joi.string()).allow(null), {
                 anyOf: [
                     { type: 'null' },
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ]
             });
         });
@@ -786,7 +785,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.array().items(Joi.string()).min(2).allow(null), {
                 type: ['array', 'null'],
-                items: { type: 'string', minLength: 1 },
+                items: { type: 'string' },
                 minItems: 2
             });
         });
@@ -795,7 +794,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.array().items(Joi.string()).max(2).allow(null), {
                 type: ['array', 'null'],
-                items: { type: 'string', minLength: 1 },
+                items: { type: 'string' },
                 maxItems: 2
             });
         });
@@ -804,7 +803,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.array().items(Joi.string()).length(2).allow(null), {
                 type: ['array', 'null'],
-                items: { type: 'string', minLength: 1 },
+                items: { type: 'string' },
                 minItems: 2,
                 maxItems: 2
             });
@@ -814,7 +813,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.array().items(Joi.string()).unique().allow(null), {
                 type: ['array', 'null'],
-                items: { type: 'string', minLength: 1 },
+                items: { type: 'string' },
                 uniqueItems: true
             });
         });
@@ -851,7 +850,7 @@ describe('jsonSchema', () => {
                 type: 'array',
                 items: {
                     anyOf: [
-                        { type: 'string', minLength: 1 },
+                        { type: 'string' },
                         { type: 'number' }
                     ]
                 }
@@ -863,8 +862,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.array().has(Joi.string()), {
                 type: 'array',
                 contains: {
-                    type: 'string',
-                    minLength: 1
+                    type: 'string'
                 }
             });
         });
@@ -876,8 +874,7 @@ describe('jsonSchema', () => {
                 allOf: [
                     {
                         contains: {
-                            type: 'string',
-                            minLength: 1
+                            type: 'string'
                         }
                     },
                     {
@@ -921,7 +918,7 @@ describe('jsonSchema', () => {
                 Helper.validateJsonSchema(schema, {
                     type: 'array',
                     prefixItems: [
-                        { type: 'string', minLength: 1 },
+                        { type: 'string' },
                         { type: 'number' }
                     ],
                     unevaluatedItems: false,
@@ -944,7 +941,7 @@ describe('jsonSchema', () => {
                 Helper.validateJsonSchema(schema, {
                     type: 'array',
                     prefixItems: [
-                        { type: 'string', minLength: 1 },
+                        { type: 'string' },
                         { type: 'number' }
                     ],
                     unevaluatedItems: false,
@@ -968,7 +965,7 @@ describe('jsonSchema', () => {
                 Helper.validateJsonSchema(schema, {
                     type: 'array',
                     prefixItems: [
-                        { type: 'string', minLength: 1 },
+                        { type: 'string' },
                         { type: 'number' }
                     ],
                     unevaluatedItems: false,
@@ -992,7 +989,7 @@ describe('jsonSchema', () => {
                 Helper.validateJsonSchema(schema, {
                     type: 'array',
                     prefixItems: [
-                        { type: 'string', minLength: 1 },
+                        { type: 'string' },
                         { type: 'number' }
                     ],
                     unevaluatedItems: false,
@@ -1017,7 +1014,7 @@ describe('jsonSchema', () => {
                 Helper.validateJsonSchema(schema, {
                     type: 'array',
                     prefixItems: [
-                        { type: 'string', minLength: 1 }
+                        { type: 'string' }
                     ],
                     unevaluatedItems: { type: 'number' }
                 }, undefined, orderedAjvOptions);
@@ -1038,7 +1035,7 @@ describe('jsonSchema', () => {
                 Helper.validateJsonSchema(schema, {
                     type: 'array',
                     prefixItems: [
-                        { type: 'string', minLength: 1 }
+                        { type: 'string' }
                     ],
                     unevaluatedItems: { type: 'number' },
                     minItems: 1
@@ -1053,7 +1050,7 @@ describe('jsonSchema', () => {
             expect((Joi.array().ordered(Joi.string()).items(Joi.number(), Joi.boolean()))['~standard'].jsonSchema.input()).to.equal({
                 type: 'array',
                 prefixItems: [
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ],
                 unevaluatedItems: {
                     anyOf: [
@@ -1093,7 +1090,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.array().ordered(Joi.string().required()), {
                 type: 'array',
-                prefixItems: [{ type: 'string', minLength: 1 }],
+                prefixItems: [{ type: 'string' }],
                 unevaluatedItems: false,
                 minItems: 1,
                 maxItems: 1
@@ -1106,9 +1103,9 @@ describe('jsonSchema', () => {
                 anyOf: [
                     {
                         type: 'array',
-                        items: { type: 'string', minLength: 1 }
+                        items: { type: 'string' }
                     },
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ]
             });
         });
@@ -1121,14 +1118,14 @@ describe('jsonSchema', () => {
                         type: 'array',
                         items: {
                             anyOf: [
-                                { type: 'string', minLength: 1 },
+                                { type: 'string' },
                                 { type: 'number' }
                             ]
                         }
                     },
                     {
                         anyOf: [
-                            { type: 'string', minLength: 1 },
+                            { type: 'string' },
                             { type: 'number' }
                         ]
                     }
@@ -1145,9 +1142,9 @@ describe('jsonSchema', () => {
                 anyOf: [
                     {
                         type: 'array',
-                        items: { type: 'string', minLength: 1 }
+                        items: { type: 'string' }
                     },
-                    { type: 'string', minLength: 1 }
+                    { type: 'string' }
                 ]
             });
         });
@@ -1413,7 +1410,7 @@ describe('jsonSchema', () => {
             }).unknown(false), {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1 },
+                    a: { type: 'string' },
                     b: { type: 'number' }
                 },
                 required: ['a'],
@@ -1426,20 +1423,20 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.object().pattern(/^s/, Joi.string()), {
                 type: 'object',
                 patternProperties: {
-                    '^s': { type: 'string', minLength: 1 }
+                    '^s': { type: 'string' }
                 },
                 additionalProperties: false
             });
 
             Helper.validateJsonSchema(Joi.object().pattern(Joi.any(), Joi.string()), {
                 type: 'object',
-                additionalProperties: { type: 'string', minLength: 1 }
+                additionalProperties: { type: 'string' }
             });
 
             Helper.validateJsonSchema(Joi.object().pattern(/^s/, Joi.string()).unknown(false), {
                 type: 'object',
                 patternProperties: {
-                    '^s': { type: 'string', minLength: 1 }
+                    '^s': { type: 'string' }
                 },
                 additionalProperties: false
             });
@@ -1449,7 +1446,7 @@ describe('jsonSchema', () => {
                 .pattern(/^n/, Joi.number()), {
                 type: 'object',
                 patternProperties: {
-                    '^s': { type: 'string', minLength: 1 },
+                    '^s': { type: 'string' },
                     '^n': { type: 'number' }
                 },
                 additionalProperties: false
@@ -1530,8 +1527,8 @@ describe('jsonSchema', () => {
             }), {
                 type: 'object',
                 properties: {
-                    z: { type: 'string', minLength: 1 },
-                    a: { type: 'string', minLength: 1 }
+                    z: { type: 'string' },
+                    a: { type: 'string' }
                 },
                 required: ['a', 'z'],
                 additionalProperties: false
@@ -1555,14 +1552,14 @@ describe('jsonSchema', () => {
                         type: 'object',
                         properties: {
                             id: { type: 'integer' },
-                            name: { type: 'string', minLength: 1 }
+                            name: { type: 'string' }
                         },
                         required: ['id', 'name'],
                         additionalProperties: false
                     },
                     tags: {
                         type: 'array',
-                        items: { type: 'string', minLength: 1 },
+                        items: { type: 'string' },
                         default: []
                     }
                 },
@@ -1607,8 +1604,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.string().description('A string').default('foo'), {
                 type: 'string',
                 description: 'A string',
-                default: 'foo',
-                minLength: 1
+                default: 'foo'
             });
         });
 
@@ -1627,7 +1623,6 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.string().pattern(/^\d+$/).pattern(/.{4,}/), {
                 type: 'string',
-                minLength: 1,
                 allOf: [
                     { pattern: '^\\d+$' },
                     { pattern: '.{4,}' }
@@ -1636,7 +1631,6 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(Joi.string().pattern(/^a/).pattern(/b/).pattern(/c$/), {
                 type: 'string',
-                minLength: 1,
                 allOf: [
                     { pattern: '^a' },
                     { pattern: 'b' },
@@ -1724,35 +1718,35 @@ describe('jsonSchema', () => {
                 format: 'uuid'
             });
 
-            Helper.validateJsonSchema(Joi.string().ip(), { type: 'string', minLength: 1, format: 'ip' });
-            Helper.validateJsonSchema(Joi.string().ip({ version: 'ipv4' }), { type: 'string', minLength: 1, format: 'ipv4' });
-            Helper.validateJsonSchema(Joi.string().ip({ version: ['ipv4', 'ipv6'] }), { type: 'string', minLength: 1, format: 'ip' });
-            Helper.validateJsonSchema(Joi.string().base64(), { type: 'string', minLength: 1, format: 'base64' });
-            Helper.validateJsonSchema(Joi.string().dataUri(), { type: 'string', minLength: 1, format: 'data-uri' });
-            Helper.validateJsonSchema(Joi.string().email(), { type: 'string', minLength: 1, format: 'email' });
-            Helper.validateJsonSchema(Joi.string().guid(), { type: 'string', minLength: 1, format: 'uuid' });
-            Helper.validateJsonSchema(Joi.string().hex(), { type: 'string', minLength: 1, format: 'hex' });
-            Helper.validateJsonSchema(Joi.string().hostname(), { type: 'string', minLength: 1, format: 'hostname' });
-            Helper.validateJsonSchema(Joi.string().isoDate(), { type: 'string', minLength: 1, format: 'date-time' });
-            Helper.validateJsonSchema(Joi.string().isoDuration(), { type: 'string', minLength: 1, format: 'duration' });
-            Helper.validateJsonSchema(Joi.string().token(), { type: 'string', minLength: 1, format: 'token' });
+            Helper.validateJsonSchema(Joi.string().ip(), { type: 'string', format: 'ip' });
+            Helper.validateJsonSchema(Joi.string().ip({ version: 'ipv4' }), { type: 'string', format: 'ipv4' });
+            Helper.validateJsonSchema(Joi.string().ip({ version: ['ipv4', 'ipv6'] }), { type: 'string', format: 'ip' });
+            Helper.validateJsonSchema(Joi.string().base64(), { type: 'string', format: 'base64' });
+            Helper.validateJsonSchema(Joi.string().dataUri(), { type: 'string', format: 'data-uri' });
+            Helper.validateJsonSchema(Joi.string().email(), { type: 'string', format: 'email' });
+            Helper.validateJsonSchema(Joi.string().guid(), { type: 'string', format: 'uuid' });
+            Helper.validateJsonSchema(Joi.string().hex(), { type: 'string', format: 'hex' });
+            Helper.validateJsonSchema(Joi.string().hostname(), { type: 'string', format: 'hostname' });
+            Helper.validateJsonSchema(Joi.string().isoDate(), { type: 'string', format: 'date-time' });
+            Helper.validateJsonSchema(Joi.string().isoDuration(), { type: 'string', format: 'duration' });
+            Helper.validateJsonSchema(Joi.string().token(), { type: 'string', format: 'token' });
         });
 
         it('represents string with various options', () => {
 
-            Helper.validateJsonSchema(Joi.string().alphanum(), { type: 'string', minLength: 1 });
+            Helper.validateJsonSchema(Joi.string().alphanum(), { type: 'string' });
             Helper.validateJsonSchema(Joi.string().allow(''), { type: 'string' });
             Helper.validateJsonSchema(Joi.string().min(0), { type: 'string' });
             Helper.validateJsonSchema(Joi.string().length(0), { type: 'string', minLength: 0, maxLength: 0 });
 
             Helper.validateJsonSchema(Joi.string().allow(1), {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     { enum: [1] }
                 ]
             });
 
-            Helper.validateJsonSchema(Joi.string().allow('a'), { type: 'string', minLength: 1 });
+            Helper.validateJsonSchema(Joi.string().allow('a'), { type: 'string' });
         });
 
         it('skips string constraints with ref arguments', () => {
@@ -1776,7 +1770,7 @@ describe('jsonSchema', () => {
                 type: 'object',
                 properties: {
                     a: { type: 'number' },
-                    b: { type: 'string', minLength: 1 }
+                    b: { type: 'string' }
                 },
                 additionalProperties: false
             });
@@ -1796,7 +1790,26 @@ describe('jsonSchema', () => {
 
         it('represents nullable string', () => {
 
-            Helper.validateJsonSchema(Joi.string().allow(null), { type: ['string', 'null'], minLength: 1 });
+            Helper.validateJsonSchema(Joi.string().allow(null), { type: ['string', 'null'] });
+        });
+
+        it('represents nullable string enum', () => {
+
+            const schema = Joi.string().valid('a', 'b').allow(null);
+            const jsonSchema = {
+                type: ['string', 'null'],
+                enum: ['a', 'b', null]
+            };
+
+            Helper.validateJsonSchema(schema, jsonSchema);
+            Helper.validateJsonSchemaValues(schema['~standard'].jsonSchema.input(), [
+                ['a', true],
+                ['b', true],
+                [null, true],
+                ['', false],
+                ['c', false],
+                [1, false]
+            ]);
         });
     });
 
@@ -1850,7 +1863,6 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(custom.string().foo(), {
                 type: 'string',
-                minLength: 1,
                 foo: true
             });
         });
@@ -1943,7 +1955,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(Joi.object({ a: Joi.string() }), {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1 }
+                    a: { type: 'string' }
                 },
                 additionalProperties: false
             });
@@ -2015,13 +2027,13 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(schema, {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1, default: 'foo' }
+                    a: { type: 'string', default: 'foo' }
                 },
                 additionalProperties: false
             }, {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1, default: 'foo' }
+                    a: { type: 'string', default: 'foo' }
                 },
                 required: ['a'],
                 additionalProperties: false
@@ -2037,7 +2049,7 @@ describe('jsonSchema', () => {
             Helper.validateJsonSchema(schema, {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1 }
+                    a: { type: 'string' }
                 },
                 required: ['a'],
                 additionalProperties: false
@@ -2058,7 +2070,7 @@ describe('jsonSchema', () => {
                     a: {
                         type: 'object',
                         properties: {
-                            b: { type: 'string', minLength: 1 }
+                            b: { type: 'string' }
                         },
                         required: ['b'],
                         additionalProperties: false
@@ -2087,7 +2099,7 @@ describe('jsonSchema', () => {
                         items: {
                             type: 'object',
                             properties: {
-                                b: { type: 'string', minLength: 1 }
+                                b: { type: 'string' }
                             },
                             required: ['b'],
                             additionalProperties: false
@@ -2104,7 +2116,7 @@ describe('jsonSchema', () => {
 
             Helper.validateJsonSchema(schema, {
                 anyOf: [
-                    { type: 'string', minLength: 1 },
+                    { type: 'string' },
                     {},
                     { type: 'number' }
                 ]
@@ -2126,7 +2138,7 @@ describe('jsonSchema', () => {
                     a: {},
                     b: {
                         anyOf: [
-                            { type: 'string', minLength: 1 },
+                            { type: 'string' },
                             {},
                             { type: 'number' }
                         ]
@@ -2179,7 +2191,7 @@ describe('jsonSchema', () => {
             }).id('type'), {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1 },
+                    a: { type: 'string' },
                     b: { $ref: '#/properties/a' }
                 },
                 additionalProperties: false
@@ -2194,7 +2206,7 @@ describe('jsonSchema', () => {
             }), {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1 },
+                    a: { type: 'string' },
                     b: {
                         $ref: '#/properties/a'
                     }
@@ -2265,7 +2277,7 @@ describe('jsonSchema', () => {
                 properties: {
                     a: {
                         anyOf: [
-                            { type: 'string', minLength: 1 },
+                            { type: 'string' },
                             { type: 'number' }
                         ]
                     },
@@ -2291,12 +2303,12 @@ describe('jsonSchema', () => {
             }), {
                 type: 'object',
                 properties: {
-                    a: { type: 'string', minLength: 1 },
+                    a: { type: 'string' },
                     b: { $ref: '#/$defs/aSchema' }
                 },
                 additionalProperties: false,
                 $defs: {
-                    aSchema: { type: 'string', minLength: 1 }
+                    aSchema: { type: 'string' }
                 }
             });
         });
